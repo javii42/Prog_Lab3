@@ -31,7 +31,7 @@
                 return false;
             }
         }
-        public function Traer(){
+        public static function Traer(){
             $conn = "mysql:host=localhost;dbname=productos_bd";
             try{
                 $televisores= NULL;
@@ -56,6 +56,37 @@
         public function CalcularIVA(){
             return $this->precio *1.21;
         }
+
+        
+
+    public static function Eliminar($tipo){
+        $conn = "mysql:host=localhost;dbname=productos_bd";
+        try{
+            $pdo = new PDO($conn,'root','');
+            $sp = $pdo->Prepare('DELETE FROM televisores WHERE (tipo="'.$tipo.'")');
+          //  var_dump($sp);
+            return ($sp->Execute());
+        }catch(PDOException $e){
+            return false;
+        }
+
+    }
+
+    public static function Modificar($tv){
+        $conn = "mysql:host=localhost;dbname=productos_bd";
+        try{
+            $pdo = new PDO($conn,'root','');
+            $query = 'UPDATE televisores SET precio='.
+            $tv->precio.',path="'.$tv->pathFoto.'" WHERE tipo="'.
+            $tv->tipo.'" AND pais="'.$tv->paisOrigen.'"';
+            //echo $query;
+            $sp = $pdo->Prepare($query);
+            return ($sp->Execute());
+        }catch(PDOException $e){
+            return false;
+        }
+
+    }
 
         
         

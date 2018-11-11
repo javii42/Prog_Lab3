@@ -13,11 +13,11 @@
             <th>Pais</th>
             <th>Precio</th>
             <th>Precio + IVA</th>
+            <th>Imagen</th>
         </tr>
         <?php
             require_once "./clases/Televisor.php";
-            $tv = new Televisor();
-            $listaTv = $tv->Traer();
+            $listaTv = Televisor::Traer();
             $html = '';
             //var_dump($listaTv);
          //   echo "<br>";
@@ -25,7 +25,7 @@
                 $html.= "<tr>";               
                 $us2 = new Televisor($t->tipo,$t->precio,$t->paisOrigen,$t->path);
                 $html.="<td>".$us2->tipo."</td><td>".$us2->paisOrigen."</td><td>".$us2->precio."</td><td>".$us2->CalcularIVA()."</td>";
-            
+                $html.='<td><img src="'.$us2->path.'" width="200px" height="200px"/></td>';
                 $html.="</tr>";
             }
             echo $html;

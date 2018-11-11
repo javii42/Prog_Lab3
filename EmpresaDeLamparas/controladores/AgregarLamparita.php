@@ -13,7 +13,7 @@ if($tipo != NULL && $precio != NULL && $color != NULL && $foto!=NULL){
     $fotoFinalName="lamparitas/imagenes/". $tipo.".".$color.".".date('h').date('i').date('s').".".$tipoArchivo;
     $destino = "../".$fotoFinalName;
     if(move_uploaded_file($foto["tmp_name"], $destino)){
-        $lamparita = New Lamparita($tipo,$precio,$color,$fotoFinalName);
+        $lamparita = New Lamparita($tipo,$precio,$pais,$fotoFinalName);
         if($lamparita->Agregar()){
             header('Location:./Listado.php');
         }else{
