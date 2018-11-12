@@ -5,6 +5,7 @@ use \Psr\Http\Message\ResponseInterface as Response;
 require_once './vendor/autoload.php';
 require_once'./Entidades/MediaApi.php';
 require_once'./Entidades/UsuarioApi.php';
+require_once'./Entidades/MW.php';
 
 $config['displayErrorDetails'] = true;
 $config['addContentLengthHeader'] = false;
@@ -22,11 +23,20 @@ desarrollo para obtener información sobre los errores
 
 $app = new \Slim\App(["settings" => $config]);
 
-$app->post('/', \MediaApi::class .':CargarUno');
-$app->get('/', \UsuarioApi::class .':TraerTodos');
+$app->group('/',function(){
+  $this->post('', \MediaApi::class .':CargarUno');
+  $this->get('', \UsuarioApi::class .':TraerTodos');
+  $this->delete('', \UsuarioApi::class . ':BorrarUno');
+  $this->put('', \UsuarioApi::class . ':ModificarUno');
+})->add(\MW::class . ":MWDos");
+  
 $app->get('/medias[/]', \MediaApi::class . ':TraerTodos');
+
 $app->post('/usuarios[/]', \UsuarioApi::class . ':CargarUno');
-$app->post('/login[/]', \UsuarioApi::class . ':Ingresar');
-$app->get('/login[/]', \UsuarioApi::class . ':Verificar');
+
+$app->group('/login',function(){
+  $this->post('[/]', \UsuarioApi::class . ':Ingresar');
+  $this->get('[/]', \UsuarioApi::class . ':Verificar');
+})->add(\MW::class . ":MWUno");
 
 $app->run();

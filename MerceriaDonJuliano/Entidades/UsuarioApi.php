@@ -21,8 +21,16 @@
 
         public function CargarUno($request, $response,$args){
             $datos = $request->getParsedBody();
+            $archivos = $request->getUploadedFiles();
+            $destino = "./fotos/";
+            $nombreArchivoAnterior = $archivos['foto']->getClientFileName();
+            $ext = explode(".",$nombreArchivoAnterior);
+            $ext = array_reverse($ext);
+            $nuevoNombre =$destino.$datos['correo'].".".$ext[0]; 
+           // move_uploaded_file($archivos['foto']["tmp_name"], $nuevoNombre);
+            $archivos['foto']->moveTo($nuevoNombre);
           //  var_dump($datos);
-            if(Usuario::AltaUsuario($datos)){
+            if(Usuario::AltaUsuario($datos,$nuevoNombre)){
                 $newResponse = $response->withJson(array(mensaje=>'Ok'),200);
             }else{
                 $newResponse = $response->withJson(array(mensaje=>'Error'),409);
@@ -39,11 +47,30 @@
             
         }
 
-        public function Ingresar($request, $response,$args){
-            
+        public function Ingresar($request, $response,$args){            
+            $datos = $request->getParsedBody();
+
+            var_dump($nuevoNombre);
+            if(Usuario::Ingresar($datos)){
+
+                $newResponse = $response->withJson(array("mensaje"=>'Ok'),200);
+            }else{
+                $newResponse = $response->withJson(array(mensaje=>'Error'),409);
+            }
+            return $newResponse;
+
         }
 
-        public function Verificar($request, $response,$args){
+        public function Verificar($request, $response,$args){    
+            $datos = $request->getParsedBody();
+          //  var_dump($datos);
+            if(Usuario::Ingresar($datos)){
+                $newResponse = $response->withJson(array(mensaje=>'Ok'),200);
+            }else{
+                $newResponse = $response->withJson(array(mensaje=>'Error'),409);
+            }
+            return $newResponse;
+
             
         }
 

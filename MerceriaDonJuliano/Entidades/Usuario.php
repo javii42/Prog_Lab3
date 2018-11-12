@@ -15,7 +15,7 @@
 
         }
 
-        public static function AltaUsuario($datos){
+        public static function AltaUsuario($datos,$nombreFoto){
             $retorno = false;
            // var_dump($datosMedia);
             //echo $datosMedia['color'];
@@ -30,7 +30,7 @@
                     $Usuario->nombre = $datos['nombre'];
                     $Usuario->apellido = $datos['apellido'];
                     $Usuario->perfil = $datos['perfil'];
-                    $Usuario->foto = $datos['foto'];
+                    $Usuario->foto = $nombreFoto;
                     
                     $conn = AccesoDatos::DameUnObjetoAcceso();
                     $consulta = $conn->RetornarConsulta('INSERT INTO usuarios(correo, clave, nombre,apellido, perfil, foto) VALUES (:correo,:clave,:nombre,:apellido,:perfil,:foto)');
@@ -72,6 +72,51 @@
                     $Usuario->foto = $datos['foto'];
 
                     $retorno[]=$Usuario;
+                }
+              //  var_dump($retorno);
+            }catch(Exception $e){
+
+                print "Error!<br/>" . $e->getMessage();
+                
+            }
+            return $retorno;
+
+        }
+
+        public function Ingresar($datos){
+            $retorno = false;
+            try{
+                $conn = AccesoDatos::DameUnObjetoAcceso();
+                $consulta = $conn->RetornarConsulta("SELECT * FROM usuarios WHERE correo = :correo");
+                $consulta->bindParam(':correo',$datos['correo']);              
+                $consulta->execute();
+                while($res = $consulta->fetch()){
+                    if($datos['correo'] == $res['correo'] && $datos['clave']== $res['clave']){
+                        $retorno = true;
+                    }
+                }
+              //  var_dump($retorno);
+            }catch(Exception $e){
+
+                print "Error!<br/>" . $e->getMessage();
+                
+            }
+            return $retorno;
+
+        }
+        
+
+        public function Verificar($datos){
+            $retorno = false;
+            try{
+                $conn = AccesoDatos::DameUnObjetoAcceso();
+                $consulta = $conn->RetornarConsulta("SELECT * FROM usuarios WHERE correo = :correo");
+                $consulta->bindParam(':correo',$datos['correo']);              
+                $consulta->execute();
+                while($res = $consulta->fetch()){
+                    if($datos['correo'] == $res['correo'] && $datos['clave']== $res['clave']){
+                        $retorno = true;
+                    }
                 }
               //  var_dump($retorno);
             }catch(Exception $e){
